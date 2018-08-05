@@ -1,0 +1,32 @@
+@import 'utils.scss';
+
+
+.box {
+  display: inline-block;
+  width: $size * 3;
+  height: $size * 3;
+  border: 1px solid black;
+  position: fixed;
+  @include place-at-center();
+
+  &.blue {
+    background: coral;
+  }
+
+  &:hover {
+    background: red;
+  }
+  &:active {
+    background: aquamarine;
+  }
+
+  .box-inside {
+    background: black;
+    width: $size;
+    height: $size;
+    @include place-at-center();
+  }
+}
+
+
+
