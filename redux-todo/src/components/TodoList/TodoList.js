@@ -14,16 +14,17 @@ class TodoList extends React.Component {
     render() {
         // console.log(this.props.todos)
         const {todos, onToggle, onRemove} = this.props;
+        const TodoList = todos.map((todo) => (
+            <TodoItem
+            key={todo.get('id')}
+            done={todo.get('done')}
+            onToggle={() => onToggle(todo.get('id'))}
+            onRemove={() => onRemove(todo.get('id'))}
+            >{todo.get('text')}</TodoItem>
+        ))
         return (
             <div>
-                {todos.map((todo, id) => <TodoItem 
-                done={todo.done}
-                onRemove={() => onRemove(todo.id)}
-                onToggle={() => onToggle(todo.id)} 
-                key={todo.id}>
-                    {todo.text}
-                </TodoItem>
-            )}
+                {TodoList}
             </div>
         );
     }

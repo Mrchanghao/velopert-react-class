@@ -15,8 +15,6 @@ export const remove = createAction(REMOVE);
 // 초기 상태
 const initialState = List([
     Map({id: 0, text: 'react study', done: false}),
-    Map({id: 1, text: 'vue study', done: false}),
-    Map({id: 2, text: 'javascript study', done: true})
 ]);
 
 // reducer
@@ -32,7 +30,7 @@ export default handleActions({
         return state.updateIn([index, 'done'], done => !done);
     },
     [REMOVE]: (state, action) => {
-        const {payload: index} = state.payload;
+        const {payload: index} = state;
 
         return state.delete(index);
     }

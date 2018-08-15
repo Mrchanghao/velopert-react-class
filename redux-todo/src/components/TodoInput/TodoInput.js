@@ -6,7 +6,10 @@ const cx = classNames.bind(styles);
 
 const TodoInput = ({value, onInsert, onChange}) => {
     return (
-        <form className={cx('todo-input')} onSubmit={onInsert}>
+        <form className={cx('todo-input')} onSubmit={(e) => {
+            onInsert();
+            e.preventDefault();
+            }}>
             <input onChange={onChange} value={value} />
             <button className={cx('add-button')}>
                 ADD
