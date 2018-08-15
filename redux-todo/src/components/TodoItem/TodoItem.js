@@ -13,15 +13,16 @@ class TodoItem extends Component {
     }
 
     render() {
-        const {done, onToggle, onRemove, children} = this.props;
+        console.log(this.props)
+        const {done, onToggle, onRemove, children, id} = this.props;
         return (
             <div className={cx('todo-item')} onClick={onToggle}>
                 <input className={cx('tick')} type='checkbox' checked={done} readOnly />
                 <span className={cx('text', {done})}>{children}</span>
                 <span className={cx('delete')} 
                     onClick={(e) => {
-                    onRemove();
-                    e.stopPropagation();
+                        onRemove(id);
+                    e.stopPropagation();    
                 }}>
                     DELETE
                 </span>

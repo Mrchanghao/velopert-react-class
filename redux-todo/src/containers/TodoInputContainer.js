@@ -9,7 +9,7 @@ import * as todosActions from '../modules/todos';
 
 class TodoInputContainer extends Component {
 
-    id = 0;
+    id = 1;
     getId = () => {
         return ++this.id;
     }

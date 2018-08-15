@@ -18,6 +18,7 @@ class TodoList extends React.Component {
             <TodoItem
             key={todo.get('id')}
             done={todo.get('done')}
+            id={todo.get('id')}
             onToggle={() => onToggle(todo.get('id'))}
             onRemove={() => onRemove(todo.get('id'))}
             >{todo.get('text')}</TodoItem>
