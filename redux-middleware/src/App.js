@@ -3,61 +3,91 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as counterActions from './modules/counter';
 import * as postActions from './modules/post';
-// import axios from 'axios';
 
 class App extends Component {
 
-    // componentDidMount() {
-    //     axios.get('https://jsonplaceholder.typicode.com/posts/1')
-    //     .then(res => console.log(res));
-    // }
 
-
-    loadData = () => {
-        const {PostActions, number} = this.props;
-        PostActions.getPost(number);
+    loadData = async () => {
+        const {postActions, number} = this.props;
+        // postActions.getPost(number)
+        // .then(res => {
+        //     console.log(res);
+        // })
+        try {
+            const res = await postActions.getPost(number);
+            console.log(res);
+        } catch (error) {
+            
+        }
     }
 
     componentDidMount() {
+        // axios.get('https://jsonplaceholder.typicode.com/posts/1')
+        // .then(res => console.log(res));
         this.loadData();
     }
 
     componentDidUpdate(prevProps, prevState) {
-        // 이전 넘버와 현재 넘버가 다르면 호출 
-        if(prevProps.number !== this.props.number) {
+        if(this.props.number !== prevProps.number) {
             this.loadData();
         }
     }
 
+
     render() {
-        const { CounterActions, number, post, loading, error } = this.props;
-        console.log(this.props);
-        console.log(postActions);
-        // console.log(CounterActions)
-        
+        const { counterActions, number, postActions, post, loading, error } = this.props;
+
         return (
             <div>
                 <h1>{number}</h1>
-                {loading ? <h1>로딩중....</h1> : (error ? <h2>오류 발생</h2> : <div>
-                    <h2>{post.title}</h2>
-                    <p>{post.body}</p>
-                </div>)}
-                <button onClick={CounterActions.incrementAsync}>+</button>
-                <button onClick={CounterActions.decrement}>-</button>
+                {loading ? <h2>Loading 중</h2> : (error ? <h2>error 발생</h2> : (
+                    <div>
+                        <h3>{post.title}</h3>
+                        <p>{post.body}</p>
+                    </div>
+                ))}
+                <button onClick={counterActions.incrementAsync}>+</button>
+                <button onClick={counterActions.decrementAsync}>-</button>
             </div>
         );
     }
 }
 
-export default connect(
-    (state) => ({
+const mapStateToProps = (state) => {
+    return {
         number: state.counter,
         post: state.post.data,
         loading: state.post.pending,
-        error: state.post.err
-    }),
-    (dispatch) => ({
-        CounterActions: bindActionCreators(counterActions, dispatch),
-        PostActions: bindActionCreators(postActions, dispatch)
-    })
-)(App);
+        error: state.post.error
+    }
+};
+
+const mapDispatchToProps = (dispatch) => {
+    
+    return {
+        counterActions: bindActionCreators(counterActions, dispatch),
+        postActions: bindActionCreators(postActions, dispatch)
+    }
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
+
+
+
+
+
+
+
+// export default connect(
+//     (state) => ({
+//         number: state.counter,
+//         // post: state.post.data,
+//         // loading: state.post.pending,
+//         // error: state.post.err
+//     }),
+//     (dispatch) => ({
+//         CounterActions: bindActionCreators(counterActions, dispatch),
+//         // PostActions: bindActionCreators(postActions, dispatch)
+//     })
+// )(App);
