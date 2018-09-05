@@ -1,4 +1,6 @@
-const Post = require('models/post')
+
+const Post = require('models/post');
+const Joi = require('joi');
 const {ObjectId} = require('mongoose').Types
 
 // 타입체크
@@ -16,6 +18,19 @@ exports.checkObjectId = (ctx, next) => {
 // 포스트 작성
 // POST /api/posts
 exports.write = async (ctx) => {
+
+    const schema = Joi.object().keys({
+        title: Joi.string().required(),
+        body: Joi.string().required(),
+        tags: Joi.array().items(Joi.string()).required()
+    })
+    const result = Joi.validate(ctx.request.body, schema);
+
+    if(result.error) {
+        ctx.status = 400;
+        ctx.body = result.error;
+        return;
+    }
     // rest api req.body는 ctx.request.body에서 조회
     const {title, body, tags} = ctx.request.body;
 
@@ -36,9 +51,25 @@ exports.write = async (ctx) => {
 // 포스트 목록 조회
 // GET /api/posts
 exports.list = async (ctx) => {
+    const page = parseInt(ctx.query.page || 1, 10);
+
+    if(page < 1) {
+        ctx.status = 400;
+        return;
+    }
     try {
-        const posts = await Post.find().exec();
-        ctx.body = posts;
+        const posts = await Post.find().sort({_id: -1})
+        .limit(10)
+        .skip((page - 1) * 10)
+        .lean()
+        .exec();
+        const postCounts = await Post.count().exec();
+        const limitBodyLength = post => ({
+            ...post,
+            body: post.body.length < 200 ? post.body : `${post.body.slice(0, 200)}...` 
+        })
+        ctx.body = posts,map(limitBodyLength);
+        ctx.set('Last', Math.ceil(postCounts / 10));
     } catch (err) {
         ctx.throw(err, 500);
     }
