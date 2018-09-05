@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-
+import Root from './Root';
+import './styles/base.scss'
 import registerServiceWorker from './registerServiceWorker';
 
-ReactDOM.render(<div>hi</div>, document.getElementById('root'));
+ReactDOM.render(<Root />, document.getElementById('root'));
 registerServiceWorker();
